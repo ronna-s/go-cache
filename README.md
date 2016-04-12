@@ -30,4 +30,4 @@ cache.Do(func(pipe cache.Batch) error {
 }
 ```
 
-TBD: signature - batch operation can either maintain an array of inputs and outputs or use a channel internally.
+TBD: signature - batch operation probably suggests response to return over a channel.
