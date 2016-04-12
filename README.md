@@ -18,10 +18,16 @@ cache.Fetch("some_key", func() interface{}{
 })
 ```
 
-or, in case your function can fail and you want to avoid writing to the cache store
+TBD: signature - should probably let the store scan the result to the object
+
+
+###Batch operations - pipeline
 
 ```go
-cache.FetchDiscreetly("some_key", func() (interface{}, error){
-  return "some_value", nil
-})
+cache.Do(func(pipe cache.Batch) error {
+  pipe.Read("some_key1")
+  pipe.Read("some_key2")
+}
 ```
+
+TBD: signature - batch operation can either maintain an array of inputs and outputs or use a channel internally.
