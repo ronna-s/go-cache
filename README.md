@@ -13,9 +13,13 @@ And in case of a cache miss, the return value of the block (i.e. "some value") w
 Now let's do the same in go:
 
 ```go
-cache.Fetch("some_key", func() interface{}{
-  return "some_value"
-})
+	var (
+		data []byte
+		err  error
+	)
+	cache.Fetch("some_key", func() ([]byte, error) {
+		return []byte{"some_value"}, nil
+	})
 ```
 
 TBD: signature - should probably let the store scan the result to an object
@@ -24,10 +28,15 @@ TBD: signature - should probably let the store scan the result to an object
 ###Batch operations - pipeline
 
 ```go
-cache.Do(func(pipe cache.Batch) error {
-  pipe.Read("some_key1")
-  pipe.Read("some_key2")
-}
+	var (
+		dataCh <-chan []byte
+		err    error
+	)
+	dataCh, err = cache.Do(func(pipe cache.Batch) {
+		pipe.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
+		pipe.Write("some_key2", 2*time.Second, []byte{"hello hello"})
+		pipe.Fetch("some_key2")
+	})
 ```
 
 TBD: signature - batch operation probably suggests response to return over a channel.
