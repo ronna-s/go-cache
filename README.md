@@ -18,7 +18,7 @@ cache.Fetch("some_key", func() interface{}{
 })
 ```
 
-TBD: signature - should probably let the store scan the result to the object
+TBD: signature - should probably let the store scan the result to an object
 
 
 ###Batch operations - pipeline
