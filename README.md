@@ -17,7 +17,7 @@ Now let's do the same in go:
 		data []byte
 		err  error
 	)
-	cache.Fetch("some_key", func() ([]byte, error) {
+	data, err = cache.Fetch("some_key", func() ([]byte, error) {
 		return []byte{"some_value"}, nil
 	})
 ```
