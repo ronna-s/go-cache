@@ -30,10 +30,10 @@ TBD: signature - should probably let the store scan the result to an object
 ```go
 
 	cache.Do(func(batch cache.Batch) error {
-		data1, _ := batch.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
-		data2, _ := batch.Get("some_key1")
-		err := batch.Write("some_key2", 2*time.Second, []byte{"hello hello"})
-		data3, _ = batch.Get("some_key2")
+		data1, _ := <-batch.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
+		data2, _ := <-batch.Get("some_key1")
+		err := <-batch.Write("some_key2", 2*time.Second, []byte{"hello hello"})
+		data3, _ = <-batch.Get("some_key2")
 		return nil
 	})
 ```
