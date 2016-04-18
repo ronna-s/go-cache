@@ -28,15 +28,17 @@ TBD: signature - should probably let the store scan the result to an object
 ###Batch operations - pipeline
 
 ```go
-	var (
-		dataCh <-chan []byte
-		err    error
-	)
-	dataCh, err = cache.Do(func(pipe cache.Batch) {
-		pipe.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
-		pipe.Write("some_key2", 2*time.Second, []byte{"hello hello"})
-		pipe.Fetch("some_key2")
+
+	cache.Do(func(batch cache.Batch) error {
+		data, _ := batch.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
+		fmt.Println(string(data)) //hello world
+		data, _ = batch.Get("some_key1")
+		fmt.Println(string(data)) //hello world
+		data = []byte{"hello hello"}
+		batch.Write("some_key2", 2*time.Second, data)
+		data, _ = batch.Get("some_key2")
+		fmt.Println(string(data)) //hello hello
+		return nil
 	})
 ```
 
-TBD: signature - batch operation probably suggests response to return over a channel.
