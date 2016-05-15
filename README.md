@@ -28,13 +28,20 @@ TBD: signature - should probably let the store scan the result to an object
 ###Batch operations - pipeline
 
 ```go
-
-	cache.Do(func(batch cache.Batch) error {
-		data1, _ := <-batch.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
-		data2, _ := <-batch.Get("some_key1")
-		err := <-batch.Write("some_key2", 2*time.Second, []byte{"hello hello"})
-		data3, _ = <-batch.Get("some_key2")
-		return nil
-	})
+	
+results, err := cache.Do(func(batch cache.Batch) error {
+  batch.Fetch("some_key1", func() ([]byte, error) { return "hello world", nil })
+  batch.Get("some_key1")
+  batch.Write("some_key2", 2*time.Second, []byte{"hello hello"})
+  batch.Get("some_key2")
+  return nil
+})
+if err == nil{
+  //results is a channel that will closed the last response is read
+  data1, err = results.Pop() //Fetch
+  data2, err = results.Pop() //Get
+  data3, err = results.Pop() //Write
+  data3, err = results.Pop() //Get
+}
 ```
 
